@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase History</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Purchase History</h1>
+
+    <table id="purchaseHistoryTable">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="purchaseHistoryTableBody">
+            <!-- Data will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const purchaseHistoryTableBody = document.getElementById("purchaseHistoryTableBody");
+
+            // Retrieve sales data from localStorage
+            const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+
+            // Check if there is any sales data
+            if (salesData.length === 0) {
+                purchaseHistoryTableBody.innerHTML = "<tr><td colspan='6'>No purchase history found.</td></tr>";
+                return;
+            }
+
+            // Loop through each sale and render it in the table
+            salesData.forEach(sale => {
+                sale.products.forEach(product => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${sale.orderId}</td>
+                        <td>${sale.date}</td>
+                        <td>${product.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>₱${product.price}</td>
+                        <td>₱${(product.price * product.quantity).toFixed(2)}</td>
+                    `;
+
+                    purchaseHistoryTableBody.appendChild(row);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
